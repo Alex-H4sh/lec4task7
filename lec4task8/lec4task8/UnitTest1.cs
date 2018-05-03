@@ -21,7 +21,20 @@ namespace lec4task8
         public void Test()
         {
             driver.Navigate().GoToUrl("http://localhost/litecart/");
-            IList<IWebElement> ducks = driver.FindElements(By.XPath());
+            IList<IWebElement> ducks = driver.FindElements(By.XPath("//ul//a[@class='link']"));
+            foreach (IWebElement el in ducks)
+            {
+                bool check = true; ;
+                try
+                {
+                    check = el.FindElement(By.XPath("//div[contains(@class,'sticker')]")).Displayed;
+                }
+                catch (NoSuchElementException)
+                {
+                    check = false;
+                }
+                Assert.IsFalse(!check, el.Text + " no stickers");
+            }
         }
 
         [TestCleanup]
