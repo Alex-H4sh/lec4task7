@@ -27,7 +27,7 @@ namespace lec4task8
                 bool check = true; ;
                 try
                 {
-                    check = el.FindElement(By.XPath("//div[contains(@class,'sticker')]")).Displayed;
+                    check = el.FindElement(By.XPath(".//div[contains(@class,'sticker')]")).Displayed;
                 }
                 catch (NoSuchElementException)
                 {

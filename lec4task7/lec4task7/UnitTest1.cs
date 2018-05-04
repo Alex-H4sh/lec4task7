@@ -64,12 +64,9 @@ namespace test3
                                 check = false;
                             }
                             Assert.IsFalse(!check, driver.Title + " doesnt have h1");
-                            driver.Navigate().Back();
                         }
                     }
-                }
-                
-                driver.Navigate().Back();            
+                }        
             }
         }
 
