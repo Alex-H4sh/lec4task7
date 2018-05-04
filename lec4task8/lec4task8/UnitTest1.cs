@@ -22,17 +22,27 @@ namespace lec4task8
         {
             driver.Navigate().GoToUrl("http://localhost/litecart/");
             IList<IWebElement> ducks = driver.FindElements(By.XPath("//ul//a[@class='link']"));
+
             foreach (IWebElement el in ducks)
             {
-                bool check = true; ;
+                bool check = false;
+                /*
+                int count_stickers = 0;
                 try
                 {
-                    check = el.FindElement(By.XPath(".//div[contains(@class,'sticker')]")).Displayed;
+                    count_stickers = el.FindElements(By.XPath(".//div[contains(@class,'sticker')]")).Count;
                 }
                 catch (NoSuchElementException)
                 {
-                    check = false;
+                    count_stickers = 0;
                 }
+
+                if (count_stickers==1)
+                    check = true;
+                */
+
+                if (el.FindElements(By.XPath(".//div[contains(@class,'sticker')]")).Count == 1)
+                    check = true;
                 Assert.IsFalse(!check, el.Text + " no stickers");
             }
         }
