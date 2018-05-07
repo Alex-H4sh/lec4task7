@@ -40,6 +40,7 @@ namespace test11
             IWebElement reg = driver.FindElement(By.XPath("//form[@name='login_form']//tr[5]/td/a"));
             reg.Click();
 
+            // Fill registration form
             IWebElement list = driver.FindElement(By.XPath("//select[@name='country_code']"));
             unhide(driver, list);
             IWebElement usa = list.FindElement(By.XPath(".//option[contains(text(),'United States')]"));
@@ -51,25 +52,34 @@ namespace test11
             driver.FindElement(By.XPath("//input[@name='lastname']")).SendKeys("Smith");
             driver.FindElement(By.XPath("//input[@name='address1']")).SendKeys("Times Garden");
             driver.FindElement(By.XPath("//input[@name='postcode']")).SendKeys("55555");
-            
-            /*IWebElement state = driver.FindElement(By.XPath("//select[@name='zone_code']"));
-            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            js.ExecuteScript("arguments[0].removeAttribute('disabled');", state);*/
 
-            driver.FindElement(By.XPath("//input[@name='email']")).SendKeys(gen_email(10));
+            string login = gen_email(10);
+            driver.FindElement(By.XPath("//input[@name='email']")).SendKeys(login);
             driver.FindElement(By.XPath("//input[@name='phone']")).SendKeys("+18934284903");
 
-            driver.FindElement(By.XPath("//input[@name='password']")).SendKeys("root");
-            driver.FindElement(By.XPath("//input[@name='confirmed_password']")).SendKeys("root");
+            string password = "123456";
+            driver.FindElement(By.XPath("//input[@name='password']")).SendKeys(password);
+            driver.FindElement(By.XPath("//input[@name='confirmed_password']")).SendKeys(password);
 
             driver.FindElement(By.XPath("//input[@name='city']")).SendKeys("California");
-            driver.FindElement(By.XPath("//button[@name='create_account']")).Submit();
+            driver.FindElement(By.XPath("//button[@name='create_account']")).Click();
+
+            //Logout
+            driver.FindElement(By.XPath("//div[@class='content']//a[contains(text(),'Logout')]")).Click();
+
+            // Login
+            driver.FindElement(By.XPath("//input[@name='email']")).SendKeys(login);
+            driver.FindElement(By.XPath("//input[@name='password']")).SendKeys(password);
+            driver.FindElement(By.XPath("//button[@name='login']")).Click();
+
+            // Logout again
+            driver.FindElement(By.XPath("//div[@class='content']//a[contains(text(),'Logout')]")).Click();
         }
 
         [TestCleanup]
         public void end()
         {
-            //driver.Quit();
+            driver.Quit();
         }
     }
 }
