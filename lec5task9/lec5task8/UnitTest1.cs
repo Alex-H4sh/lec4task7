@@ -20,6 +20,13 @@ namespace test3
             driver.FindElement(By.Name("login")).Click();
         }
 
+        private void test_order(List<string> new_order)
+        {
+            List<string> old_order = new List<string>(new_order);
+            new_order.Sort();
+            Assert.IsTrue(old_order.SequenceEqual(new_order), "Wrong order!");
+        }
+
         [TestInitialize]
         public void init()
         {
@@ -34,36 +41,31 @@ namespace test3
             // Step 1-1a
             driver.Navigate().GoToUrl("http://localhost/litecart/admin/?app=countries&doc=countries");
             IList<IWebElement> rows = driver.FindElements(By.XPath("//table[@class='dataTable']//tr[@class='row']"));
-            List<string> x = new List<string>();
+            List<string> main_countries = new List<string>();
             List<string> multi_tz_links = new List<string>();
             foreach (IWebElement el in rows)
             {
                 IWebElement td = el.FindElement(By.XPath("./td[5]//a"));
-                x.Add(td.Text);
+                main_countries.Add(td.Text);
                 string s = el.FindElement(By.XPath("./td[6]")).Text;
                 if (s != "0")
                 {
                     multi_tz_links.Add(td.GetAttribute("href"));
                 }
             }
-            List<string> y = new List<string>(x);
-            x.Sort();
-            Assert.IsFalse(!(y.SequenceEqual(x)), "Wrong order!");
+            test_order(main_countries);
 
             // Step 1b
             foreach (string href in multi_tz_links)
             {
                 driver.Navigate().GoToUrl(href);
-                List<string> u = new List<string>();
-                IList<IWebElement> in_rows = driver.FindElements(By.XPath("//table[@class='dataTable']//tr//td[3]//input"));
+                List<string> sub_countries = new List<string>();
+                IList<IWebElement> in_rows = driver.FindElements(By.XPath("//table[@class='dataTable']//td[3]//input[@type='hidden']"));
                 foreach (IWebElement ch in in_rows)
                 {
-                   u.Add(ch.Text);
+                    sub_countries.Add(ch.Text);
                 }
-
-                List<string> z = new List<string>(u);
-                u.Sort();
-                Assert.IsFalse(!(z.SequenceEqual(u)), "Wrong order!");
+                test_order(sub_countries);
             }
             
             // Step 2
@@ -79,17 +81,14 @@ namespace test3
             foreach (string href in link)
             {
                 driver.Navigate().GoToUrl(href);
-                List<string> u = new List<string>();
-                IList<IWebElement> in_rows = driver.FindElements(By.XPath("//table[@id='table-zones']//tr//td[3]//select//option[@selected='selected']"));
+                List<string> geo_zones = new List<string>();
+                IList<IWebElement> in_rows = driver.FindElements(By.XPath("//select[contains(@name,'zone_code')]//option[@selected='selected']"));
                 foreach (IWebElement ch in in_rows)
                 {
-                    u.Add(ch.Text);
+                    geo_zones.Add(ch.Text);
                     System.Console.WriteLine(ch.Text);
                 }
-
-                List<string> z = new List<string>(u);
-                u.Sort();
-                Assert.IsFalse(!(z.SequenceEqual(u)), "Wrong order!");
+                test_order(geo_zones);
             }
         }
 
