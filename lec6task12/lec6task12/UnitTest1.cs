@@ -86,7 +86,7 @@ namespace test11
         [TestCleanup]
         public void end()
         {
-            //driver.Quit();
+            driver.Quit();
         }
     }
 }
