@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using System.Linq;
 using OpenQA.Selenium.Chrome;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,19 +20,6 @@ namespace test11
             return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray())+"@gmail.com";
         }
 
-        public void unhide(IWebDriver driver, IWebElement element)
-        {
-            String script = "arguments[0].style.opacity=1;"
-              + "arguments[0].style['transform']='translate(0px, 0px) scale(1)';"
-              + "arguments[0].style['MozTransform']='translate(0px, 0px) scale(1)';"
-              + "arguments[0].style['WebkitTransform']='translate(0px, 0px) scale(1)';"
-              + "arguments[0].style['msTransform']='translate(0px, 0px) scale(1)';"
-              + "arguments[0].style['OTransform']='translate(0px, 0px) scale(1)';"
-              + "return true;";
-            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            js.ExecuteScript(script, element);
-        }
-
         [TestMethod]
         public void Test()
         {
@@ -41,10 +29,8 @@ namespace test11
             reg.Click();
 
             // Fill registration form
-            IWebElement list = driver.FindElement(By.XPath("//select[@name='country_code']"));
-            unhide(driver, list);
-            IWebElement usa = list.FindElement(By.XPath(".//option[contains(text(),'United States')]"));
-            usa.Click();
+            SelectElement country_select = new SelectElement(driver.FindElement(By.XPath("//select[@name='country_code']")));
+            country_select.SelectByText("United States");
 
             driver.FindElement(By.XPath("//button[@name='create_account']")).Submit();
 
