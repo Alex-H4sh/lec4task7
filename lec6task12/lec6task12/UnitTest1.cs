@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using System.Linq;
 using OpenQA.Selenium.Chrome;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,18 +14,6 @@ namespace test11
     {
         static IWebDriver driver;
 
-        public void unhide(IWebDriver driver, IWebElement element)
-        {
-            String script = "arguments[0].style.opacity=1;"
-              + "arguments[0].style['transform']='translate(0px, 0px) scale(1)';"
-              + "arguments[0].style['MozTransform']='translate(0px, 0px) scale(1)';"
-              + "arguments[0].style['WebkitTransform']='translate(0px, 0px) scale(1)';"
-              + "arguments[0].style['msTransform']='translate(0px, 0px) scale(1)';"
-              + "arguments[0].style['OTransform']='translate(0px, 0px) scale(1)';"
-              + "return true;";
-            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            js.ExecuteScript(script, element);
-        }
         private void login(IWebDriver driver)
         {
             driver.Navigate().GoToUrl("https://localhost/litecart/admin");
@@ -39,6 +28,21 @@ namespace test11
             driver = new ChromeDriver();
             login(driver);
             driver.FindElement(By.XPath("//span[contains(text(),'Catalog')]")).Click();
+
+            // If there are other "Notebook"s - delete them
+            IList<IWebElement> goods = driver.FindElements(By.XPath("//table[@class='dataTable']//td[3]//a[contains(text(),'Notebook')]"));
+            if (goods.Count>0)
+            {
+                foreach (IWebElement el in goods)
+                {
+                    System.Console.WriteLine(el.Text);
+                    el.FindElement(By.XPath("./../../td[1]/input")).Click();
+                }
+                driver.FindElement(By.XPath("//span//button[@name='delete']")).Click();
+                IAlert alert = driver.SwitchTo().Alert();
+                alert.Accept();
+            }
+            
             driver.FindElement(By.XPath("//a[contains(text(),'Add New Product')]")).Click();
 
             // Fill General tab
@@ -54,7 +58,8 @@ namespace test11
 
             // Fill Informmation tab
             driver.FindElement(By.XPath("//a[contains(text(),'Information')]")).Click();
-            driver.FindElement(By.XPath("//select[@name='manufacturer_id']//option[@value='1']")).Click();
+            SelectElement manuf_select = new SelectElement(driver.FindElement(By.XPath("//select[@name='manufacturer_id']")));
+            manuf_select.SelectByValue("1");
             driver.FindElement(By.XPath("//input[@name='keywords']")).SendKeys("notebook");
             driver.FindElement(By.XPath("//input[@name='short_description[en]']")).SendKeys("Notebook Acer");
             driver.FindElement(By.XPath("//div[@class='trumbowyg-editor']")).SendKeys("From everyday computing to a tough\n" 
@@ -64,7 +69,8 @@ namespace test11
 
             // Fill Prices tab
             driver.FindElement(By.XPath("//a[contains(text(),'Prices')]")).Click();
-            driver.FindElement(By.XPath("//select[@name='purchase_price_currency_code']//option[@data-value='1']")).Click();
+            SelectElement price_select = new SelectElement(driver.FindElement(By.XPath("//select[@name='purchase_price_currency_code']")));
+            price_select.SelectByText("US Dollars");
             driver.FindElement(By.XPath("//input[@name='purchase_price']")).Clear();
             driver.FindElement(By.XPath("//input[@name='purchase_price']")).SendKeys("1000");
 
