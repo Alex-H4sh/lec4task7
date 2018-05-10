@@ -1,6 +1,4 @@
-﻿using System;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -9,11 +7,12 @@ namespace lec11task19
     [TestClass]
     public class UnitTest
     {
-        static IWebDriver driver;
+        MainDriver driver;
 
         [TestInitialize]
         public void init() {
-            driver = new ChromeDriver();
+            IWebDriver ch_driver = new ChromeDriver();
+            driver = MainDriver.getInstance(ch_driver); // Singleton
         }
 
         [TestMethod]
@@ -38,7 +37,7 @@ namespace lec11task19
         [TestCleanup]
         public void end()
         {
-            driver.Quit();
+            SupportFunctions.EndDriver(driver);
         }
     }
 }

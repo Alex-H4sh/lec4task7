@@ -6,14 +6,14 @@ namespace lec11task19
 {
     class Checkout
     {
-        public Checkout(IWebDriver driver_)
+        public Checkout(MainDriver driver_)
         {
             driver = driver_;
         }
 
         public void GoToBin()
         {
-            driver.FindElement(By.XPath("//a[contains(text(),'Checkout')]")).Click();
+            driver.Driver.FindElement(By.XPath("//a[contains(text(),'Checkout')]")).Click();
         }
 
         public void DeleteFirstProduct()
@@ -24,20 +24,20 @@ namespace lec11task19
 
         private void ClickOnFirstProduct()
         {
-            if (driver.FindElements(By.XPath("//div[@id='checkout-cart-wrapper']//ul[@class='shortcuts']/li")).Count > 0)
+            if (driver.Driver.FindElements(By.XPath("//div[@id='checkout-cart-wrapper']//ul[@class='shortcuts']/li")).Count > 0)
             {
-                driver.FindElement(By.XPath("//div[@id='checkout-cart-wrapper']//ul[@class='shortcuts']/li[1]")).Click();
+                driver.Driver.FindElement(By.XPath("//div[@id='checkout-cart-wrapper']//ul[@class='shortcuts']/li[1]")).Click();
             }
         }
 
         private void RemoveItem()
         {
-            driver.FindElement(By.XPath("//button[@name='remove_cart_item']")).Click();
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-            IWebElement el = driver.FindElement(By.XPath("//table[@class='dataTable rounded-corners']//tr[2]"));
+            driver.Driver.FindElement(By.XPath("//button[@name='remove_cart_item']")).Click();
+            WebDriverWait wait = new WebDriverWait(driver.Driver, TimeSpan.FromSeconds(5));
+            IWebElement el = driver.Driver.FindElement(By.XPath("//table[@class='dataTable rounded-corners']//tr[2]"));
             wait.Until(ExpectedConditions.StalenessOf(el));
         }
 
-        private IWebDriver driver;
+        private MainDriver driver;
     }
 }
