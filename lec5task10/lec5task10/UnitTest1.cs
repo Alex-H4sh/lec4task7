@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Collections;
+using System.Text.RegularExpressions;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
@@ -19,35 +18,22 @@ namespace lec5task10
         public string[] color_value(IWebDriver driver, string xp_)
         {
             string orig_price_norm_c = driver.FindElement(By.XPath(xp_)).GetCssValue("color");
-            String type = driver.GetType().ToString();
-            if (type.Contains("Firefox"))
+            List<string> colors = new List<string>();
+            foreach (Match m in Regex.Matches(orig_price_norm_c, @"\d{1,3}"))
             {
-                string[] delimiterChars = { "rgb(", ")", ", " };
-                string[] colors = orig_price_norm_c.Split(delimiterChars, System.StringSplitOptions.RemoveEmptyEntries);
-                return colors;
+                colors.Add(m.Value);
             }
-            else
-            {
-                string[] delimiterChars = { "rgba(", ")", ", " };
-                string[] colors = orig_price_norm_c.Split(delimiterChars, System.StringSplitOptions.RemoveEmptyEntries);
-                return colors;
-            }
+            return colors.ToArray();
         }
         public string[] color_value(IWebDriver driver, IWebElement el, string xp_)
         {
             string orig_price_norm_c = el.FindElement(By.XPath(xp_)).GetCssValue("color");
-            String type = driver.GetType().ToString();
-            if (type.Contains("Firefox"))
+            List<string> colors = new List<string>();
+            foreach (Match m in Regex.Matches(orig_price_norm_c, @"\d{1,3}"))
             {
-                string[] delimiterChars = { "rgb(", ")", ", " };
-                string[] colors = orig_price_norm_c.Split(delimiterChars, System.StringSplitOptions.RemoveEmptyEntries);
-                return colors;
+                colors.Add(m.Value);
             }
-            else {
-                string[] delimiterChars = { "rgba(", ")", ", " };
-                string[] colors = orig_price_norm_c.Split(delimiterChars, System.StringSplitOptions.RemoveEmptyEntries);
-                return colors;
-            }
+            return colors.ToArray();
         }
 
         public void test_prices(IWebDriver driver)
